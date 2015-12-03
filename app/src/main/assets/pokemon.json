@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Bulbasaur",
+    "type": "Planta",
+    "path": "http://cdn.bulbagarden.net/upload/thumb/2/21/001Bulbasaur.png/250px-001Bulbasaur.png",
+    "latitude": -12.0920441,
+    "longitude": -77.0442545
+  },
+  {
+    "name": "Charizard",
+    "type": "Dragon-Fuego",
+    "path": "http://cdn.bulbagarden.net/upload/thumb/7/7e/006Charizard.png/250px-006Charizard.png",
+    "latitude": -12.0920839,
+    "longitude": -77.0395284
+  },
+  {
+    "name": "Wartortle",
+    "type": "Agua",
+    "path": "https://s3.graphiq.com/sites/default/files/620/media/images/t2/Wartortle_45749.png",
+    "latitude": -12.0906808,
+    "longitude": -77.0203171
+  }
+]
