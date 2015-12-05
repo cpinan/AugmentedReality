@@ -101,6 +101,7 @@ public class AugmentedRealityView extends SurfaceView implements SurfaceHolder.C
             camera = Camera.open();
             camera.setPreviewDisplay(getHolder());
             camera.startPreview();
+            isInPreview = true;
         } catch (IOException e) {
             e.printStackTrace();
         }

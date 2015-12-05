@@ -53,7 +53,7 @@ public class RadarObject extends BaseObject {
             float[] orientation = getCurrentOrientation();
             canvas.save();
             canvas.clipRect(radarRect);
-            canvas.rotate(orientation[0], cx, cy);
+            canvas.rotate(-orientation[0], cx, cy);
             canvas.drawLine(cx, cy, cx, cy + radarRadius, paintLineRadar);
             canvas.drawCircle(cx, cy, radarRadius, paintRadar);
             canvas.drawCircle(cx, cy, radarRadius, paintRadarBorder);

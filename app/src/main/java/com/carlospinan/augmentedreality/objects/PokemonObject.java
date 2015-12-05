@@ -14,29 +14,34 @@ public class PokemonObject extends BaseObject {
 
     private PokemonEntity pokemonEntity;
     private float distance;
-    private float angle;
+    private boolean isVisible;
 
+    private float dX;
     private Paint paintPokemonData;
+    private double mAzimuthTeoretical;
 
     public PokemonObject(PokemonEntity pokemonEntity, float width, float height) {
         super(width, height);
         this.distance = Float.MIN_VALUE;
         this.pokemonEntity = pokemonEntity;
+        this.dX = 0;
 
         paintPokemonData = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintPokemonData.setARGB(255, 255, 0, 0);
         paintPokemonData.setFakeBoldText(true);
         paintPokemonData.setTextSize(30.0f);
         paintPokemonData.setTextAlign(Paint.Align.CENTER);
+
+        this.isVisible = false;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (pokemonEntity != null && pokemonEntity.getBitmap() != null) {
+        if (isVisible && pokemonEntity != null && pokemonEntity.getBitmap() != null) {
             float bitmapWidth = pokemonEntity.getBitmap().getWidth();
             float bitmapHeight = pokemonEntity.getBitmap().getHeight();
 
-            float posX = width * 0.5f - bitmapWidth * 0.5f;
+            float posX = (width * 0.5f - bitmapWidth * 0.5f);
             float posY = height * 0.5f - bitmapHeight * 0.5f;
 
             canvas.save();
@@ -46,7 +51,7 @@ public class PokemonObject extends BaseObject {
                 canvas.drawText(pokemonEntity.getName(), posX + pokemonDXWidth, posY + bitmapHeight * 0.2f, paintPokemonData);
                 canvas.drawText(pokemonEntity.getType(), posX + pokemonDXWidth, posY + bitmapHeight * 0.4f, paintPokemonData);
                 canvas.drawText(String.format("Distancia: %.2f KM", distance), posX + pokemonDXWidth, posY + bitmapHeight * 0.6f, paintPokemonData);
-                canvas.drawText(String.format("Angle: %.2f", angle), posX + pokemonDXWidth, posY + bitmapHeight * 0.8f, paintPokemonData);
+                canvas.drawText(String.format("Angle: %.2f", mAzimuthTeoretical), posX + pokemonDXWidth, posY + bitmapHeight * 0.8f, paintPokemonData);
             }
             canvas.restore();
         }
@@ -56,15 +61,19 @@ public class PokemonObject extends BaseObject {
     public void setCurrentLocation(Location currentLocation) {
         super.setCurrentLocation(currentLocation);
         this.distance = Helper.distanceAndBearing(currentLocation, pokemonEntity.getLocation())[0] / 1000; // Kilometers
-        this.angle = currentLocation.bearingTo(pokemonEntity.getLocation());
-        if (this.angle < 0) {
-            this.angle += 360;
-        }
     }
 
     @Override
     public void setCurrentOrientation(float[] currentOrientation) {
         super.setCurrentOrientation(currentOrientation);
+        if (getCurrentLocation() != null) {
+            double mAzimuthReal = currentOrientation[0];
+            mAzimuthTeoretical = Helper.calculateAngle(pokemonEntity.getLocation(), getCurrentLocation());
+            double minAngle = Helper.calculateAzimuthAccuracy(mAzimuthTeoretical).get(0);
+            double maxAngle = Helper.calculateAzimuthAccuracy(mAzimuthTeoretical).get(1);
+            isVisible = Helper.isBetween(minAngle, maxAngle, mAzimuthReal);
+            dX = (float) (mAzimuthTeoretical - mAzimuthReal);
+        }
     }
 
 }

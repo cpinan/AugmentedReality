@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class Helper {
 
+    private static final double AZIMUTH_ACCURACY = 15;
+
     public static float[] distanceAndBearing(Location origin, Location destination) {
         float[] results = new float[3];
         Location.distanceBetween(
@@ -91,6 +93,43 @@ public class Helper {
             return null;
         }
         return json;
+    }
 
+    public static double calculateAngle(Location destination, Location origin) {
+        float angle = (origin.bearingTo(destination) + 360) % 360;
+//        Log.d("pokeAngle", String.valueOf(angle));
+        return angle;
+    }
+
+    public static List<Double> calculateAzimuthAccuracy(double azimuth) {
+        double minAngle = azimuth - AZIMUTH_ACCURACY;
+        double maxAngle = azimuth + AZIMUTH_ACCURACY;
+        List<Double> minMax = new ArrayList<>();
+
+        if (minAngle < 0)
+            minAngle += 360;
+
+        if (maxAngle >= 360)
+            maxAngle -= 360;
+
+        minMax.clear();
+        minMax.add(minAngle);
+        minMax.add(maxAngle);
+
+        return minMax;
+    }
+
+    public static boolean isBetween(double minAngle, double maxAngle, double azimuth) {
+//        Log.d("isBetween", String.format("%f - %f - %f", minAngle, maxAngle, azimuth));
+        if (minAngle > maxAngle) {
+            if (azimuth >= minAngle || azimuth <= maxAngle) {
+                return true;
+            }
+        } else {
+            if (azimuth >= minAngle && azimuth <= maxAngle) {
+                return true;
+            }
+        }
+        return false;
     }
 }

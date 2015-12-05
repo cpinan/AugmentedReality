@@ -141,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                  */
                 SensorManager.getOrientation(outR, orientation);
 
-                float azimuth = (float) Math.toDegrees(orientation[0]) + 180;
-                float pitch = (float) Math.toDegrees(orientation[1]) + 180;
-                float roll = (float) Math.toDegrees(orientation[2]) + 180;
+                float azimuth = transform(orientation[0]);
+                float pitch = transform(orientation[1]);
+                float roll = transform(orientation[2]);
 
                 if (Constants.SHOW_DATA_ON_SCREEN) {
                     String result = String.format
@@ -221,6 +221,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (sensorManager != null) {
             sensorManager.unregisterListener(this);
         }
+    }
+
+    private float transform(float value) {
+        return (float) ((Math.toDegrees(value) + 360) % 360);
     }
 
 }
